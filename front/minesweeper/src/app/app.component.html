@@ -14,11 +14,9 @@ Mines wepeers
 
 <div *ngFor="let rows of board" style="float: left">
   <div *ngFor="let cell of rows">
-    <div [ngClass]="!cell.isRevealed?'cell not-revealed':'cell'" class="cell" style="display: flex;align-items: center;justify-content: center;">
+    <div [ngClass]="!cell.isRevealed?'cell not-revealed':'cell'" (click)="reveal(cell)"
+         class="cell" style="display: flex;align-items: center;justify-content: center;">
       <b>{{!cell.isRevealed?"":cell.isMine?"X":cell.peers}}</b>
     </div>
   </div>
 </div>
-
-
-json:  {{board | json}}

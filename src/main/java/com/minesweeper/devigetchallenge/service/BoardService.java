@@ -14,14 +14,38 @@ import java.util.stream.Collectors;
 public class BoardService {
 
     public Board createBoard() {
-        List<List<Cell>> preview = generateBoard(10,10);
-        MinedBoard minedBoard = mineBoard(preview, 10);
+        List<List<Cell>> preview = generateBoard(5,5);
+        MinedBoard minedBoard = mineBoard(preview, 5);
         Board board = numberNeighbors(minedBoard);
         return board;
     }
 
     private Board numberNeighbors(MinedBoard board) {
-        board.getMines().stream().forEach(mine -> setNeighbors(board.getBoard(), mine));
+//        board.getMines().stream().forEach(mine -> setNeighbors(board.getBoard(), mine));
+        int rows = board.getBoard().size();
+        int cols = board.getBoard().get(0).size();
+        for(int z = 0; z<board.getMines().size();z++){
+            System.out.println("mine" + board.getMines().get(z).getRow() + " - " + board.getMines().get(z).getCol());
+
+            for(int peerX = -1; peerX<=1; peerX++){
+                for(int peerY = -1; peerY<=1; peerY++){
+                    int y = board.getMines().get(z).getRow();
+                    int x = board.getMines().get(z).getCol();
+                    if(((x + peerX<0) || (x + peerX > (rows - 1))) ||
+                            ((y + peerY<0) || (y + peerY > (cols - 1))) ){
+                    }else{
+                        Integer peers = board.getBoard().get(x + peerX).get(y + peerY).getPeers();
+                        peers = peers + 1;
+                        int npx = x + peerX;
+                        int npy = y + peerY;
+                        System.out.println(npx+"-"+npy+"-"+peers);
+                        board.getBoard().get(npx).get(npy).setPeers(peers);
+                    }
+
+                }
+            }
+
+        }
         Board b = Board.newBuilder().build();
         b.getCells().addAll(board.getBoard().stream()
                 .flatMap(List::stream)
@@ -29,31 +53,32 @@ public class BoardService {
         return b;
     }
 
-    private void setNeighbors(List<List<Cell>> board, Cell mine) {
-        int rows = board.size();
-        int cols = board.get(0).size();
-        for(int peerX = -1; peerX<=1; peerX++){
-            for(int peerY = -1; peerY<=1; peerY++){
-                int x = mine.getRow();
-                int y = mine.getCol();
-                if(((x + peerX<0) || (x + peerX > (rows - 1))) ||
-                        ((y + peerY<0) || (y + peerY > (cols - 1))) ){
-                }else{
-                    Integer peers = board.get(x + peerX).get(y + peerY).getPeers();
-                    board.get(x + peerX).get(y + peerY).setPeers(++peers);
-                }
-
-            }
-        }
-    }
+//    private void setNeighbors(List<List<Cell>> board, Cell mine) {
+//        int rows = board.size();
+//        int cols = board.get(0).size();
+//        for(int peerX = -1; peerX<=1; peerX++){
+//            for(int peerY = -1; peerY<=1; peerY++){
+//                int x = mine.getRow();
+//                int y = mine.getCol();
+//                if(((x + peerX<0) || (x + peerX > (rows - 1))) ||
+//                        ((y + peerY<0) || (y + peerY > (cols - 1))) ){
+//                }else{
+//                    Integer peers = board.get(x + peerX).get(y + peerY).getPeers();
+//                    peers = peers + 1;
+//                    board.get(x + peerX).get(y + peerY).setPeers(peers);
+//                }
+//
+//            }
+//        }
+//    }
 
     private MinedBoard mineBoard(List<List<Cell>> board, Integer minesSize) {
         List<Cell> mines = new ArrayList<>();
         int mineCounter = 0;
         ThreadLocalRandom randomizer = ThreadLocalRandom.current();
         while (mineCounter < minesSize){
-            Integer mineRow = randomizer.nextInt(board.size());
-            Integer mineCol = randomizer.nextInt(board.get(0).size());
+            Integer mineRow = randomizer.nextInt(board.size()-1);
+            Integer mineCol = randomizer.nextInt(board.get(0).size()-1);
             if(putMines(board, mineRow, mineCol)){
                 mines.add(board.get(mineRow).get(mineCol));
                 mineCounter++;

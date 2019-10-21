@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1")
 public class GameController {
@@ -34,11 +35,14 @@ public class GameController {
     }
 
     @PostMapping("/games")
+    @CrossOrigin(origins = "*")
+    @ResponseBody
     public Game createGame() {
         return gameService.createGame();
     }
 
     @PatchMapping("/games/{id}/board/{boardId}/reveal")
+    @CrossOrigin(origins = "*")
     @ResponseBody
     public CellDto reveal(@PathVariable Long id, @PathVariable Integer boardId,
                           @Valid @RequestBody CellDto cell) throws Exception {

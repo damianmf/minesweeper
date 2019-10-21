@@ -1,18 +1,12 @@
 package com.minesweeper.devigetchallenge.service;
 
 import com.minesweeper.devigetchallenge.dto.CellDto;
-import com.minesweeper.devigetchallenge.dto.GameDto;
 import com.minesweeper.devigetchallenge.model.Board;
-import com.minesweeper.devigetchallenge.model.Cell;
 import com.minesweeper.devigetchallenge.model.Game;
-import com.minesweeper.devigetchallenge.repository.CellRepository;
 import com.minesweeper.devigetchallenge.repository.GameRepository;
 import com.minesweeper.devigetchallenge.translator.GameTranslator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class GameService {

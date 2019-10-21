@@ -9,9 +9,9 @@ public class Cell {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
+    @Column(name = "col")
     private Integer col;
-    @Column
+    @Column(name = "row")
     private Integer row;
     @Column
     private Boolean isRevealed;
