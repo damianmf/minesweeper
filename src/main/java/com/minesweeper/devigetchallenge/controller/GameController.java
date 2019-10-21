@@ -1,11 +1,13 @@
 package com.minesweeper.devigetchallenge.controller;
 
+import com.minesweeper.devigetchallenge.dto.CellDto;
 import com.minesweeper.devigetchallenge.dto.GameDto;
 import com.minesweeper.devigetchallenge.model.Game;
 import com.minesweeper.devigetchallenge.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,10 +38,11 @@ public class GameController {
         return gameService.createGame();
     }
 
-    @PatchMapping("/games/{id}/reveal-cell")
+    @PatchMapping("/games/{id}/board/{boardId}/reveal")
     @ResponseBody
-    public String reveal() {
-        return null;
+    public CellDto reveal(@PathVariable Long gameId, @PathVariable Long boardId,
+                          @Valid @RequestBody CellDto cell) {
+        return gameService.reveal(gameId, boardId, cell);
     }
 
 }

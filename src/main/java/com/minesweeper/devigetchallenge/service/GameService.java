@@ -1,5 +1,6 @@
 package com.minesweeper.devigetchallenge.service;
 
+import com.minesweeper.devigetchallenge.dto.CellDto;
 import com.minesweeper.devigetchallenge.dto.GameDto;
 import com.minesweeper.devigetchallenge.model.Board;
 import com.minesweeper.devigetchallenge.model.Cell;
@@ -31,5 +32,9 @@ public class GameService {
         Game game = Game.newBuilder().board(board).build();
         repository.save(game);
         return game;
+    }
+
+    public CellDto reveal(Long gameId, Long boardId, CellDto cell) {
+        return null;
     }
 }
