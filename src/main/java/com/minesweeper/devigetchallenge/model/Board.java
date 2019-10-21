@@ -19,6 +19,24 @@ public class Board {
     public Board() {
     }
 
+    private Board(Builder builder) {
+        setId(builder.id);
+        setCells(builder.cells);
+        setRevealToWinCounter(builder.revealToWinCounter);
+    }
+
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
+    public static Builder newBuilder(Board copy) {
+        Builder builder = new Builder();
+        builder.id = copy.getId();
+        builder.cells = copy.getCells();
+        builder.revealToWinCounter = copy.getRevealToWinCounter();
+        return builder;
+    }
+
     public Long getId() {
         return id;
     }
@@ -41,5 +59,33 @@ public class Board {
 
     public void setRevealToWinCounter(Integer revealToWinCounter) {
         this.revealToWinCounter = revealToWinCounter;
+    }
+
+    public static final class Builder {
+        private Long id;
+        private List<Cell> cells;
+        private Integer revealToWinCounter;
+
+        private Builder() {
+        }
+
+        public Builder id(Long val) {
+            id = val;
+            return this;
+        }
+
+        public Builder cells(List<Cell> val) {
+            cells = val;
+            return this;
+        }
+
+        public Builder revealToWinCounter(Integer val) {
+            revealToWinCounter = val;
+            return this;
+        }
+
+        public Board build() {
+            return new Board(this);
+        }
     }
 }

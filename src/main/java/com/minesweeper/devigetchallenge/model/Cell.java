@@ -20,6 +20,20 @@ public class Cell {
     @Column
     private Integer peers;
 
+    private Cell(Builder builder) {
+        setId(builder.id);
+        setCol(builder.col);
+        setRow(builder.row);
+        isRevealed = builder.isRevealed;
+        isMine = builder.isMine;
+        setPeers(builder.peers);
+    }
+
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
+
     public Long getId() {
         return id;
     }
@@ -66,5 +80,51 @@ public class Cell {
 
     public void setPeers(Integer peers) {
         this.peers = peers;
+    }
+
+    public static final class Builder {
+        private Long id;
+        private Integer col;
+        private Integer row;
+        private Boolean isRevealed;
+        private Boolean isMine;
+        private Integer peers;
+
+        private Builder() {
+        }
+
+        public Builder id(Long val) {
+            id = val;
+            return this;
+        }
+
+        public Builder col(Integer val) {
+            col = val;
+            return this;
+        }
+
+        public Builder row(Integer val) {
+            row = val;
+            return this;
+        }
+
+        public Builder isRevealed(Boolean val) {
+            isRevealed = val;
+            return this;
+        }
+
+        public Builder isMine(Boolean val) {
+            isMine = val;
+            return this;
+        }
+
+        public Builder peers(Integer val) {
+            peers = val;
+            return this;
+        }
+
+        public Cell build() {
+            return new Cell(this);
+        }
     }
 }

@@ -20,6 +20,26 @@ public class Game {
     public Game() {
     }
 
+    private Game(Builder builder) {
+        setId(builder.id);
+        setBoard(builder.board);
+        setStatus(builder.status);
+        setLevel(builder.level);
+    }
+
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
+    public static Builder newBuilder(Game copy) {
+        Builder builder = new Builder();
+        builder.id = copy.getId();
+        builder.board = copy.getBoard();
+        builder.status = copy.getStatus();
+        builder.level = copy.getLevel();
+        return builder;
+    }
+
     public Long getId() {
         return id;
     }
@@ -50,5 +70,39 @@ public class Game {
 
     public void setLevel(GameLevel level) {
         this.level = level;
+    }
+
+    public static final class Builder {
+        private Long id;
+        private Board board;
+        private GameStatus status;
+        private GameLevel level;
+
+        private Builder() {
+        }
+
+        public Builder id(Long val) {
+            id = val;
+            return this;
+        }
+
+        public Builder board(Board val) {
+            board = val;
+            return this;
+        }
+
+        public Builder status(GameStatus val) {
+            status = val;
+            return this;
+        }
+
+        public Builder level(GameLevel val) {
+            level = val;
+            return this;
+        }
+
+        public Game build() {
+            return new Game(this);
+        }
     }
 }
