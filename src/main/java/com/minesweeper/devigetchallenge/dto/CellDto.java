@@ -6,6 +6,10 @@ public class CellDto {
     private Integer col;
     private Boolean isMine;
 
+
+    public CellDto() {
+    }
+
     private CellDto(Builder builder) {
         setRow(builder.row);
         setCol(builder.col);

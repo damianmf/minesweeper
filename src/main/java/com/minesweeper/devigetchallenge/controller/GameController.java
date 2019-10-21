@@ -40,9 +40,9 @@ public class GameController {
 
     @PatchMapping("/games/{id}/board/{boardId}/reveal")
     @ResponseBody
-    public CellDto reveal(@PathVariable Long gameId, @PathVariable Long boardId,
-                          @Valid @RequestBody CellDto cell) {
-        return gameService.reveal(gameId, boardId, cell);
+    public CellDto reveal(@PathVariable Long id, @PathVariable Integer boardId,
+                          @Valid @RequestBody CellDto cell) throws Exception {
+        return gameService.reveal(id, boardId, cell);
     }
 
 }

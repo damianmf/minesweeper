@@ -19,6 +19,11 @@ public class Cell {
     private Boolean isMine;
     @Column
     private Integer peers;
+    @Column(name = "board_id")
+    private Integer boardId;
+
+    public Cell() {
+    }
 
     private Cell(Builder builder) {
         setId(builder.id);
@@ -33,6 +38,13 @@ public class Cell {
         return new Builder();
     }
 
+    public Integer getBoardId() {
+        return boardId;
+    }
+
+    public void setBoardId(Integer boardId) {
+        this.boardId = boardId;
+    }
 
     public Long getId() {
         return id;
