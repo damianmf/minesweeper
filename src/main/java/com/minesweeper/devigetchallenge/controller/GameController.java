@@ -1,6 +1,7 @@
 package com.minesweeper.devigetchallenge.controller;
 
 import com.minesweeper.devigetchallenge.dto.GameDto;
+import com.minesweeper.devigetchallenge.model.Game;
 import com.minesweeper.devigetchallenge.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class GameController {
     }
 
     @PostMapping("/games")
-    public GameDto createGame() {
+    public Game createGame() {
         return gameService.createGame();
     }
 

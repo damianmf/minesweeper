@@ -1,5 +1,7 @@
 package com.minesweeper.devigetchallenge.model;
 
+import com.google.common.collect.Lists;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -63,7 +65,7 @@ public class Board {
 
     public static final class Builder {
         private Long id;
-        private List<Cell> cells;
+        private List<Cell> cells = Lists.newArrayList();
         private Integer revealToWinCounter;
 
         private Builder() {
