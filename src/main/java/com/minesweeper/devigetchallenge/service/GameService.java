@@ -21,14 +21,15 @@ public class GameService {
     private GameTranslator translator;
 
     private BoardService boardService;
-    private CellRepository cellRepository;
+    private CellService cellService;
 
     @Autowired
-    public GameService(GameRepository repository, GameTranslator translator, BoardService boardService, CellRepository cellRepository) {
+    public GameService(GameRepository repository, GameTranslator translator, BoardService boardService,
+                       CellService cellService) {
         this.repository=repository;
         this.translator=translator;
         this.boardService=boardService;
-        this.cellRepository = cellRepository;
+        this.cellService=cellService;
     }
 
     public Game createGame(){
@@ -39,14 +40,6 @@ public class GameService {
     }
 
     public CellDto reveal(Long gameId, Integer boardId, CellDto cell) throws Exception {
-        Optional<Cell> revealedCell = cellRepository.findOneByBoardIdAndRowAndCol(boardId, cell.getRow(), cell.getCol());
-        Cell domain = revealedCell.orElseThrow(() -> new Exception("Cell not found"));
-        domain.setRevealed(Boolean.TRUE);
-        CellDto dto = CellDto.newBuilder()
-                .col(domain.getCol())
-                .row(domain.getRow())
-                .isMine(domain.getMine())
-                .build();
-        return dto;
+        return cellService.reveal(boardId, cell.getRow(), cell.getCol());
     }
 }

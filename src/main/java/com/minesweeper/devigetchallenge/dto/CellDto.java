@@ -5,6 +5,7 @@ public class CellDto {
     private Integer row;
     private Integer col;
     private Boolean isMine;
+    private Integer peers;
 
 
     public CellDto() {
@@ -14,6 +15,7 @@ public class CellDto {
         setRow(builder.row);
         setCol(builder.col);
         isMine = builder.isMine;
+        setPeers(builder.peers);
     }
 
     public static Builder newBuilder() {
@@ -25,7 +27,16 @@ public class CellDto {
         builder.row = copy.getRow();
         builder.col = copy.getCol();
         builder.isMine = copy.getMine();
+        builder.peers = copy.getPeers();
         return builder;
+    }
+
+    public Integer getPeers() {
+        return peers;
+    }
+
+    public void setPeers(Integer peers) {
+        this.peers = peers;
     }
 
     public Integer getRow() {
@@ -56,6 +67,7 @@ public class CellDto {
         private Integer row;
         private Integer col;
         private Boolean isMine;
+        private Integer peers;
 
         private Builder() {
         }
@@ -72,6 +84,11 @@ public class CellDto {
 
         public Builder isMine(Boolean val) {
             isMine = val;
+            return this;
+        }
+
+        public Builder peers(Integer val) {
+            peers = val;
             return this;
         }
 
