@@ -1,6 +1,5 @@
 package com.minesweeper.devigetchallenge.repository;
 
-import com.minesweeper.devigetchallenge.model.Cell;
 import com.minesweeper.devigetchallenge.model.Game;
 import com.minesweeper.devigetchallenge.model.GameStatus;
 import org.springframework.data.jpa.repository.JpaRepository;

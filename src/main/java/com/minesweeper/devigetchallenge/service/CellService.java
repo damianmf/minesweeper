@@ -2,7 +2,7 @@ package com.minesweeper.devigetchallenge.service;
 
 import com.google.common.collect.Lists;
 import com.minesweeper.devigetchallenge.dto.CellDto;
-import com.minesweeper.devigetchallenge.model.Board;
+import com.minesweeper.devigetchallenge.exceptions.ResourceNotFoundException;
 import com.minesweeper.devigetchallenge.model.Cell;
 import com.minesweeper.devigetchallenge.model.Game;
 import com.minesweeper.devigetchallenge.model.GameStatus;
@@ -77,7 +77,7 @@ public class CellService {
     }
 
     public List<CellDto> getNotRevealedCells(Long gameId) throws Exception {
-        Game game = gameRepository.findById(gameId).orElseThrow(() -> new Exception("Cell not found"));
+        Game game = gameRepository.findById(gameId).orElseThrow(() -> new ResourceNotFoundException(String.format("Game %d not found", gameId )));
         return game.getBoard().getCells().stream()
                 .filter(cell -> cell.getRevealed())
                 .map(cell -> translator.translate(cell))

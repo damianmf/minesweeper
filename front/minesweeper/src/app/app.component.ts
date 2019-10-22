@@ -47,10 +47,11 @@ export class AppComponent {
       .subscribe((res:any)=>{
         console.log(res);
         this.gameId = res.id;
-        this.boardId = res.board.id;
+        this.boardId = res.boardId;
         this.games.push({id:res.id, status:res.status})
-      });
-    this.board = this.initBoard(this.config.rows,this.config.cols);
+          this.board = this.initBoard(this.config.rows,this.config.cols);
+        },
+        err => alert(JSON.stringify(err)),);
   }
 
   public reveal(cell: Cell){
@@ -128,7 +129,6 @@ export class AppComponent {
           if(this.games[i].id == id)
             this.games[i].status = "PAUSED";
         }
-
       });
   }
 }

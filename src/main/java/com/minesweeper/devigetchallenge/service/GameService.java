@@ -1,12 +1,10 @@
 package com.minesweeper.devigetchallenge.service;
 
-import com.minesweeper.devigetchallenge.dto.CellDto;
-import com.minesweeper.devigetchallenge.dto.GameDto;
-import com.minesweeper.devigetchallenge.dto.RequestGameDto;
-import com.minesweeper.devigetchallenge.dto.RevealResult;
+import com.minesweeper.devigetchallenge.dto.*;
+import com.minesweeper.devigetchallenge.exceptions.ResourceNotFoundException;
+import com.minesweeper.devigetchallenge.exceptions.ValidationException;
 import com.minesweeper.devigetchallenge.model.Board;
 import com.minesweeper.devigetchallenge.model.Game;
-import com.minesweeper.devigetchallenge.model.GameLevel;
 import com.minesweeper.devigetchallenge.model.GameStatus;
 import com.minesweeper.devigetchallenge.repository.GameRepository;
 import com.minesweeper.devigetchallenge.translator.GameTranslator;
@@ -14,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.minesweeper.devigetchallenge.model.GameStatus.INPROGRESS;
@@ -36,15 +33,15 @@ public class GameService {
         this.cellService=cellService;
     }
 
-    public Game createGame(RequestGameDto cell) throws Exception {
+    public GameDto createGame(RequestGameDto cell) throws Exception {
         List<Game> oneByStatus = repository.findByStatus(INPROGRESS);
         if(oneByStatus.size() > 0){
-            throw new Exception("Game in progress");
+            throw new ValidationException("Game in progress");
         }
         Board board = boardService.createBoard(cell);
-        Game game = Game.newBuilder().status(INPROGRESS).level(GameLevel.EASY).board(board).build();
+        Game game = Game.newBuilder().status(INPROGRESS).board(board).build();
         repository.save(game);
-        return game;
+        return translator.translate(game);
     }
 
     public RevealResult reveal(Long gameId, Integer boardId, CellDto cell) throws Exception {
@@ -62,14 +59,16 @@ public class GameService {
                 .collect(Collectors.toList());
     }
 
-    public void changeStatus(Long id, GameStatus status) throws Exception {
-        Game game = repository.findById(id).orElseThrow(() -> new Exception("sd"));
-        game.setStatus(status);
+    public void changeStatus(Long id, GameStatusDto status) throws Exception {
+        Game game = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Game %d not found", id)));
+        game.setStatus(GameStatus.valueOf(status.name()));
         repository.save(game);
     }
 
     public GameDto loadGame(Long gameId) throws Exception {
-        Game game = repository.findById(gameId).orElseThrow(() -> new Exception("sd"));
+        Game game = repository.findById(gameId).orElseThrow(()
+                -> new ResourceNotFoundException(String.format("Game %d not found", gameId)));
         return GameDto.newBuilder()
                 .id(game.getId())
                 .col(game.getBoard().getColSize())

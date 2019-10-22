@@ -1,12 +1,10 @@
 package com.minesweeper.devigetchallenge.dto;
 
-import com.minesweeper.devigetchallenge.model.GameStatus;
-
 import java.util.List;
 
 public class GameDto {
     private Long id;
-    private GameStatus status;
+    private GameStatusDto status;
     private List<CellDto> cells;
     private Integer row;
     private Integer col;
@@ -47,11 +45,11 @@ public class GameDto {
         this.cells = cells;
     }
 
-    public GameStatus getStatus() {
+    public GameStatusDto getStatus() {
         return status;
     }
 
-    public void setStatus(GameStatus status) {
+    public void setStatus(GameStatusDto status) {
         this.status = status;
     }
 
@@ -90,7 +88,7 @@ public class GameDto {
 
     public static final class Builder {
         private Long id;
-        private GameStatus status;
+        private GameStatusDto status;
         private List<CellDto> cells;
         private Integer row;
         private Integer col;
@@ -104,7 +102,7 @@ public class GameDto {
             return this;
         }
 
-        public Builder status(GameStatus val) {
+        public Builder status(GameStatusDto val) {
             status = val;
             return this;
         }

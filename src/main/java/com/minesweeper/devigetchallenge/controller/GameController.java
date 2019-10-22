@@ -4,8 +4,6 @@ import com.minesweeper.devigetchallenge.dto.CellDto;
 import com.minesweeper.devigetchallenge.dto.GameDto;
 import com.minesweeper.devigetchallenge.dto.RequestGameDto;
 import com.minesweeper.devigetchallenge.dto.RevealResult;
-import com.minesweeper.devigetchallenge.model.Game;
-import com.minesweeper.devigetchallenge.model.GameStatus;
 import com.minesweeper.devigetchallenge.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +38,7 @@ public class GameController {
     @PostMapping("/games")
     @CrossOrigin(origins = "*")
     @ResponseBody
-    public Game createGame(@RequestBody RequestGameDto cell) throws Exception {
+    public GameDto createGame(@RequestBody RequestGameDto cell) throws Exception {
         return gameService.createGame(cell);
     }
 
