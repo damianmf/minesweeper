@@ -8,6 +8,6 @@ import org.springframework.stereotype.Service;
 public class GameTranslator {
 
     public GameDto translate(Game domain){
-        return GameDto.newBuilder().id(domain.getId()).build();
+        return GameDto.newBuilder().status(domain.getStatus()).id(domain.getId()).build();
     }
 }

@@ -11,6 +11,22 @@ Mines wepeers
     background-color: darkgrey;
   }
 </style>
+<select [(ngModel)]="config.rows">Rows
+  <option value=5>5</option>
+  <option value=10>10</option>
+  <option value=15>15</option>
+</select>
+<select [(ngModel)]="config.cols">Cols
+  <option value=5>5</option>
+  <option value=10>10</option>
+  <option value=15>15</option>
+</select>
+<select [(ngModel)]="config.mines">Mines
+  <option value=5>5</option>
+  <option value=10>10</option>
+  <option value=15>15</option>
+</select>
+<button (click)="newGame()">New game</button>
 
 <div *ngFor="let rows of board" style="float: left">
   <div *ngFor="let cell of rows">
@@ -19,4 +35,12 @@ Mines wepeers
       <b>{{!cell.isRevealed?"":cell.isMine?"X":cell.peers}}</b>
     </div>
   </div>
+</div>
+
+
+PLAYING ON GAMEID => {{gameId}}
+<div *ngFor="let game of games">
+  {{game | json}}
+  <button *ngIf="game.status == 'PAUSED'" (click)="load(game.id)">Resume</button>
+  <button *ngIf="game.status == 'INPROGRESS'" (click)="pause(game.id)">Pause</button>
 </div>

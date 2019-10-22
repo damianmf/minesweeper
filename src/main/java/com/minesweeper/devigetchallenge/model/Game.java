@@ -13,8 +13,10 @@ public class Game {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Board board;
     @Column
+    @Enumerated(EnumType.STRING)
     private GameStatus status;
     @Column
+    @Enumerated(EnumType.STRING)
     private GameLevel level;
 
     public Game() {

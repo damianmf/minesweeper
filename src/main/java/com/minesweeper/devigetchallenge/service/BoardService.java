@@ -1,8 +1,11 @@
 package com.minesweeper.devigetchallenge.service;
 
+import com.minesweeper.devigetchallenge.dto.RequestGameDto;
 import com.minesweeper.devigetchallenge.model.Board;
 import com.minesweeper.devigetchallenge.model.Cell;
 import com.minesweeper.devigetchallenge.model.MinedBoard;
+import com.minesweeper.devigetchallenge.repository.BoardRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,15 +16,21 @@ import java.util.stream.Collectors;
 @Service
 public class BoardService {
 
-    public Board createBoard() {
-        List<List<Cell>> preview = generateBoard(5,5);
-        MinedBoard minedBoard = mineBoard(preview, 5);
+    private BoardRepository repository;
+
+    @Autowired
+    public BoardService(BoardRepository repository) {
+        this.repository = repository;
+    }
+
+    public Board createBoard(RequestGameDto cell) {
+        List<List<Cell>> preview = generateBoard(cell.getRows()==null?5:cell.getRows(),cell.getCols()==null?5:cell.getCols());
+        MinedBoard minedBoard = mineBoard(preview, cell.getMines()==null?5:cell.getMines());
         Board board = numberNeighbors(minedBoard);
         return board;
     }
 
     private Board numberNeighbors(MinedBoard board) {
-//        board.getMines().stream().forEach(mine -> setNeighbors(board.getBoard(), mine));
         int rows = board.getBoard().size();
         int cols = board.getBoard().get(0).size();
         for(int z = 0; z<board.getMines().size();z++){
@@ -46,31 +55,12 @@ public class BoardService {
             }
 
         }
-        Board b = Board.newBuilder().build();
+        Board b = Board.newBuilder().colSize(cols).rowSize(rows).revealToWinCounter((rows*cols) - board.getMines().size()).build();
         b.getCells().addAll(board.getBoard().stream()
                 .flatMap(List::stream)
                 .collect(Collectors.toList()));
         return b;
     }
-
-//    private void setNeighbors(List<List<Cell>> board, Cell mine) {
-//        int rows = board.size();
-//        int cols = board.get(0).size();
-//        for(int peerX = -1; peerX<=1; peerX++){
-//            for(int peerY = -1; peerY<=1; peerY++){
-//                int x = mine.getRow();
-//                int y = mine.getCol();
-//                if(((x + peerX<0) || (x + peerX > (rows - 1))) ||
-//                        ((y + peerY<0) || (y + peerY > (cols - 1))) ){
-//                }else{
-//                    Integer peers = board.get(x + peerX).get(y + peerY).getPeers();
-//                    peers = peers + 1;
-//                    board.get(x + peerX).get(y + peerY).setPeers(peers);
-//                }
-//
-//            }
-//        }
-//    }
 
     private MinedBoard mineBoard(List<List<Cell>> board, Integer minesSize) {
         List<Cell> mines = new ArrayList<>();
@@ -111,5 +101,12 @@ public class BoardService {
             }
         }
         return board;
+    }
+
+    public Integer decrementToWin(int size, Integer boardId) {
+        Board board = repository.getOne(boardId);
+        board.setRevealToWinCounter(board.getRevealToWinCounter() - size);
+        repository.save(board);
+        return board.getRevealToWinCounter();
     }
 }

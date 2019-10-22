@@ -28,19 +28,29 @@ export class AppComponent {
   boardId:number;
   gameId:number;
   private baseUrl: string = "http://localhost:8080/api/v1/";
+  games: any;
+  rows: any;
+  cols: any ;
+  mines: any;
+  config: {rows:number, cols:number, mines:number} = {
+    rows: 5,
+    cols: 5,
+    mines: 5
+  };
 
   constructor(private httpClient: HttpClient){
-    this.initializeBoard();
+    this.initGamesTable();
   }
 
   private initializeBoard() {
-    this.httpClient.post(this.baseUrl + "/games",{})
+    this.httpClient.post(this.baseUrl + "games",{rows:this.config.rows,cols:this.config.cols,mines:this.config.mines})
       .subscribe((res:any)=>{
         console.log(res);
         this.gameId = res.id;
         this.boardId = res.board.id;
+        this.games.push({id:res.id, status:res.status})
       });
-    this.board = this.initBoard(5,5);
+    this.board = this.initBoard(this.config.rows,this.config.cols);
   }
 
   public reveal(cell: Cell){
@@ -48,23 +58,77 @@ export class AppComponent {
       {row:cell.y, col:cell.x})
       .subscribe((res:any)=>{
         console.log(res);
-        if(res.mine){
-          alert("You lose");
-        }else{
-          this.board[res.col][res.row] = new Cell(res.col, res.row, true, res.mine, res.peers);
+        for(let i=0;i<res.cells.length;i++){
+          if(res.cells[i].mine){
+            alert("You lose");
+            return;
+          }else{
+            this.board[res.cells[i].col][res.cells[i].row] = new Cell(res.cells[i].col, res.cells[i].row, true, res.cells[i].mine, res.cells[i].peers);
+          }
         }
-
+        if(res.toWin == 0){
+          alert("You win");
+          return;
+        }
       });
   }
 
   private initBoard(row: number, col: number) {
-    let array = new Array(row);
+    let array = new Array(Number(row));
     for(let i = 0;i<array.length;i++){
-      array[i] = new Array(col);
+      array[i] = new Array(Number(col));
       for(let y = 0;y<array[i].length;y++){
         array[i][y] = new Cell(i, y, false);
       }
     }
     return array;
+  }
+
+  load(id: any) {
+    this.httpClient.get(this.baseUrl + "games/" + id)
+      .subscribe((res:any)=>{
+        let game = res;
+        this.httpClient.patch(this.baseUrl + "games/"+id+"/status",{status:"INPROGRESS"})
+          .subscribe((res:any)=>{
+            this.loadBoard(game);
+          });
+      });
+    for (let i = 0; i<this.games.length;i++){
+      if(this.games[i].id == id)
+        this.games[i].status = "INPROGRESS";
+    }
+  }
+
+  private loadBoard(game: any) {
+    this.gameId = game.id;
+    this.boardId = game.boardId;
+    this.board = this.initBoard(game.row, game.col);
+    for(let i=0;i<game.cells.length;i++){
+      let cell = game.cells[i];
+      this.board[cell.col][cell.row] =
+        new Cell(cell.col, cell.row, true, cell.mine, cell.peers);
+    }
+  }
+
+  private initGamesTable() {
+    this.httpClient.get(this.baseUrl + "games")
+      .subscribe((res:any)=>{
+        this.games = res;
+      });
+  }
+
+  newGame() {
+    this.initializeBoard();
+  }
+
+  pause(id: any) {
+    this.httpClient.patch(this.baseUrl + "games/"+id+"/status",{status:"PAUSED"})
+      .subscribe((res:any)=>{
+        for (let i = 0; i<this.games.length;i++){
+          if(this.games[i].id == id)
+            this.games[i].status = "PAUSED";
+        }
+
+      });
   }
 }
