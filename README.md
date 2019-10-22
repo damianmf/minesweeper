@@ -57,4 +57,11 @@ Done in an easy way with three different selects of rows, columns and mines.
 
 *Ability to support multiple users/accounts [PENDING]
 
+### Tests
+Backend [PENDING]
+Frontend [PENDING]
+
+### Usage
+Brief of how to start the project...
+
 Please address any questions and comments to [dami.fontenla@gmail.com](dami.fontenla@gmail.com).
