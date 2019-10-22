@@ -28,7 +28,7 @@ Implemented on java, documented with javadoc and swagger, the api development wa
 Started creating a basic game with two http operations, create board (POST) and reveal a cell (PATCH). With this operations
 and a client to interact with the api a first version could be delivered.
 Api becames bigger and fetch games was implemented in order to list plays and load a not finished game.
-...  
+Config initial properties for the board  
 
 * Implement an API client library for the API designed above. Ideally, in a different language, of your preference, to the one used for the API
 Done on Angular 7, due to fast set up of a project and previous experience. (I would not use it if i had more time to develop it)
