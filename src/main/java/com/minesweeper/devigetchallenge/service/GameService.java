@@ -33,6 +33,9 @@ public class GameService {
         this.cellService=cellService;
     }
 
+    /**
+     * Start new game in case the is not another in progress
+     * */
     public GameDto createGame(RequestGameDto cell) throws Exception {
         List<Game> oneByStatus = repository.findByStatus(INPROGRESS);
         if(oneByStatus.size() > 0){
@@ -44,6 +47,9 @@ public class GameService {
         return translator.translate(game);
     }
 
+    /**
+     * Reveal a cell, decrement counter of cells to be revealed
+     * */
     public RevealResult reveal(Long gameId, Integer boardId, CellDto cell) throws Exception {
         List<CellDto> cellDtos = cellService.revealCells(gameId, boardId, cell.getRow(), cell.getCol());
         Integer toWin = 0;
@@ -66,6 +72,9 @@ public class GameService {
         repository.save(game);
     }
 
+    /**
+    * Retrieve only revealed cells to recreate last status board
+    * */
     public GameDto loadGame(Long gameId) throws Exception {
         Game game = repository.findById(gameId).orElseThrow(()
                 -> new ResourceNotFoundException(String.format("Game %d not found", gameId)));

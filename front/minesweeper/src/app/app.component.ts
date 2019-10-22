@@ -29,9 +29,6 @@ export class AppComponent {
   gameId:number;
   private baseUrl: string = "http://localhost:8080/api/v1/";
   games: any;
-  rows: any;
-  cols: any ;
-  mines: any;
   config: {rows:number, cols:number, mines:number} = {
     rows: 5,
     cols: 5,

@@ -22,14 +22,12 @@ import java.util.stream.Collectors;
 public class CellService {
     private CellRepository cellRepository;
     private CellTranslator translator;
-    private BoardRepository boardRepository;
     private GameRepository gameRepository;
+
     @Autowired
-    public CellService(CellRepository cellRepository, CellTranslator translator, BoardRepository boardRepository,
-                       GameRepository gameRepository) {
+    public CellService(CellRepository cellRepository, CellTranslator translator, GameRepository gameRepository) {
         this.cellRepository = cellRepository;
         this.translator = translator;
-        this.boardRepository = boardRepository;
         this.gameRepository = gameRepository;
     }
 
@@ -39,6 +37,9 @@ public class CellService {
         return domain;
     }
 
+    /**
+     * Handle recursively adjacent reveal cell in case it applies
+     * */
     private List<Cell> revealPeears(Cell domain, Integer row, Integer col) throws Exception {
         List<Cell> rpears = new ArrayList<>();
         for(int peerX = -1; peerX<=1; peerX++){
@@ -62,6 +63,9 @@ public class CellService {
         return rpears;
     }
 
+    /**
+     * Reveal main cell, change status if a mine is found, start adjacent flow in case the cell has no peers
+     * */
     public List<CellDto> revealCells(Long gameId, Integer boardId, Integer row, Integer col) throws Exception {
         Game game = gameRepository.findById(gameId).orElseThrow(() -> new Exception("Cell not found"));;
         Cell reveal = this.reveal(boardId, row, col);
@@ -70,6 +74,7 @@ public class CellService {
         revealedCells.add(reveal);
         if(reveal.getMine()){
             game.setStatus(GameStatus.FINISH);
+            gameRepository.save(game);
         }else if(reveal.getPeers() == 0l){
             revealedCells.addAll(revealPeears(reveal, game.getBoard().getRowSize(), game.getBoard().getColSize()));
         }
